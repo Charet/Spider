@@ -4,7 +4,8 @@ from lxml import etree
 import time
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/69.0.3497.100 Safari/537.36',
     'referer': 'https://www.mangabz.com/m22238/'}
 
 
@@ -26,21 +27,21 @@ def getCatalog(url):
     href = htmlCode.xpath('//*[@id="chapterlistload"]/a/@href')
     # for each in href:
     #     print(each)
-    titeo_old = htmlCode.xpath('//*[@id="chapterlistload"]/a/text()')
-    # print(titeo_old)
-    titeo_new = []
-    for each in titeo_old:
-        titeo_new.append(each.strip(' '))
-    titeo = [i for i in titeo_new if i != '']
-    # for each in titeo:
+    title_old = htmlCode.xpath('//*[@id="chapterlistload"]/a/text()')
+    # print(title_old)
+    title_new = []
+    for each in title_old:
+        title_new.append(each.strip(' '))
+    title = [i for i in title_new if i != '']
+    # for each in title:
     #     print(each)
-    # print(type(titeo))
+    # print(type(title))
     page_old = htmlCode.xpath('//*[@id="chapterlistload"]/a/span/text()')
     page = []
     for each in page_old[::-1]:
         page.append(each.strip('（P）'))
 
-    return href, titeo, page
+    return href, title, page
 
 
 def getPageNum(href: str, mid, page, cid):

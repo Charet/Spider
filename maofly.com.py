@@ -4,10 +4,13 @@ import lzstring
 import json
 import re
 
+headers = {"Referer": "https://www.maofly.com"}
+s = requests.Session()
+
 
 def GetPhotosUrl(comicUrl):
-    domain = 'https://www.maofly.com/uploads/'
-    response = requests.get(comicUrl)
+    domain = 'https://mao.mhtupian.com/uploads/'
+    response = s.get(comicUrl)
     response.encoding = "utf-8"
     chapterNum = re.findall(r"data-chapter_num=\"(.*?)\"", response.text)[0]
     chapterType = re.findall(r"data-chapter-type=\"(.*?)\"", response.text)[0]
@@ -19,7 +22,7 @@ def GetPhotosUrl(comicUrl):
 
 
 def DownPhotos(ImgUrl, chapterNum):
-    img = requests.get(ImgUrl).content
+    img = s.get(ImgUrl, headers=headers).content
     pageName = ImgUrl.split('/', )[-1]
     if not path.exists(f'./Downloads/maofly/{chapterNum}/'):
         mkdir(f'./Downloads/maofly/{chapterNum}/')
@@ -29,7 +32,7 @@ def DownPhotos(ImgUrl, chapterNum):
 
 def GetNextPageUrl(chapterNum, chapterType):
     url = f"https://www.maofly.com/chapter_num?chapter_id={chapterNum}&ctype=1&type={chapterType}"
-    response = requests.get(url)
+    response = s.get(url)
     pageUrl = json.loads(response.content)["url"]
     return pageUrl
 
@@ -43,7 +46,7 @@ def main():
         for imgUrl in imgUrlArr:
             DownPhotos(imgUrl, chapterNum)
         url = GetNextPageUrl(chapterNum, chapterType)
-        print("#")
+        print("#", end=None)
 
 
 if __name__ == "__main__":
